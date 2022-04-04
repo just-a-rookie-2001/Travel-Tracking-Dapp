@@ -50,6 +50,11 @@ contract Immigration {
         return p.last_known_location;
     }
 
+    function getCitizen(uint id) public view returns (Citizen memory){
+        require(citizenHashMap[id].id==id, "Citizen does not exist");
+        return citizenHashMap[id];
+    }
+
     // flight functions
     function createNewFlight(uint flight_id, string memory code, string memory flight_name, string memory operator, string memory departure_airport_code, string memory arrival_airport_code) public{
         require(planeHashMap[flight_id].id!=flight_id, "Flight already exists");
@@ -82,5 +87,10 @@ contract Immigration {
         passengersInFlight[flight_id].push(c);
 
         changeLastKnownLocation(citizen_id, planeHashMap[flight_id].arrival_airport_code);
+    }
+
+    function getFlight(uint id) public view returns (Flight memory){
+        require(planeHashMap[id].id==id, "Flight does not exist");
+        return planeHashMap[id];
     }
 }

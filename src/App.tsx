@@ -1,4 +1,4 @@
-import { About, Login, SignUp, CreatePerson, CreateFlight } from "./pages";
+import { AddPersonToFlight, Login, SignUp, CreatePerson, CreateFlight } from "./pages";
 import { Route, Routes } from "react-router-dom";
 
 const App = () => {
@@ -8,7 +8,7 @@ const App = () => {
       <Route path="/signup" element={<SignUp />} />
       <Route path="/createperson" element={<CreatePerson />} />
       <Route path="/createflight" element={<CreateFlight />} />
-      <Route path="/about" element={<About />} />
+      <Route path="/add" element={<AddPersonToFlight />} />
     </Routes>
   );
 };

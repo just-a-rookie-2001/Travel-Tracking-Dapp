@@ -4,6 +4,8 @@ import { AbiItem } from "web3-utils";
 import ImmigrationContract from "../../build/contracts/Immigration.json";
 
 const web3 = new Web3(import.meta.env.VITE_BLOCKCHAIN_RPC_SERVER_URL);
+const accounts = await web3.eth.getAccounts();
+// web3.eth.defaultAccount = accounts[0];
 let contract = new web3.eth.Contract(
   ImmigrationContract.abi as AbiItem[],
   import.meta.env.VITE_BLOCKCHAIN_CONTRACT_ADDRESS
@@ -16,10 +18,9 @@ const createPersonOnBlockchain = (
   dateOfBirth: string,
   nationality: string
 ) => {
-  console.log(import.meta.env.VITE_BLOCKCHAIN_CONTRACT_ADDRESS, import.meta.env.VITE_BLOCKCHAIN_RPC_SERVER_URL)
   return contract.methods
     .createNewCitizen(id, passport, name, dateOfBirth, nationality)
-    .send({ from: "0x4a495a2Db8af6FC7b66DfB6D35872401378115b1", gas: 1000000 });
+    .send({ from: accounts[0], gas: 1000000 });
 };
 
 const createFlightOnBlockchain = (
@@ -32,7 +33,27 @@ const createFlightOnBlockchain = (
 ) => {
   return contract.methods
     .createNewFlight(id, code, flight_name, operator, departure, arrival)
-    .send({ from: "0x4a495a2Db8af6FC7b66DfB6D35872401378115b1", gas: 1000000 });
+    .send({ from: accounts[0], gas: 1000000 });
 };
 
-export { createPersonOnBlockchain, createFlightOnBlockchain };
+const getCitizen = (id: number) => {
+  return contract.methods.getCitizen(id).call();
+};
+
+const getFlight = (id: number) => {
+  return contract.methods.getFlight(id).call();
+};
+
+const addPersonToFlight = (citizen_id: number, flight_id: number) => {
+  return contract.methods
+    .addPersonToFlight(citizen_id, flight_id)
+    .send({ from: accounts[0], gas: 1000000 });
+};
+
+export {
+  createPersonOnBlockchain,
+  createFlightOnBlockchain,
+  getCitizen,
+  getFlight,
+  addPersonToFlight,
+};
