@@ -19,7 +19,7 @@ const App: React.FC = () => {
       <Route path="/create-desk" element={<CreateDesk />} />
       <Route path="/createperson" element={<CreatePerson />} />
       <Route path="/createflight" element={<CreateFlight />} />
-      <Route path="/add" element={<AddPersonToFlight />} />
+      <Route path="/add-person-to-flight" element={<AddPersonToFlight />} />
     </Routes>
   );
 };

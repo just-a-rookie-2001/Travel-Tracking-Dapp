@@ -11,9 +11,9 @@ import {
   IconButton,
   Container,
 } from "@mui/material";
+import useAuth from "../store/auth-store";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-
 import { logInWithEmailAndPassword } from "../services/firebase";
 
 interface State {
@@ -23,6 +23,7 @@ interface State {
 }
 
 const Login: React.FC = () => {
+  const { user } = useAuth();
   const [values, setValues] = React.useState<State>({
     email: "",
     password: "",
@@ -46,7 +47,14 @@ const Login: React.FC = () => {
     event.preventDefault();
     logInWithEmailAndPassword(values.email, values.password);
   };
-
+  if (user.uid) {
+    return (
+      <>
+        <Typography>You are alrady logged in as {user.name?.toUpperCase()}</Typography>
+        <Button>Log Out</Button>
+      </>
+    );
+  }
   return (
     <Container>
       <Typography

@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import countryList from "../data/countries.json";
 import { createFlightOnBlockchain } from "../services/blockchain";
+import useAuth from "../store/auth-store";
 
 interface State {
   id: string;
@@ -23,6 +24,7 @@ interface State {
 }
 
 const CreatePerson: React.FC = () => {
+  const { user } = useAuth();
   const [values, setValues] = React.useState<State>({
     id: "",
     code: "",
@@ -53,106 +55,112 @@ const CreatePerson: React.FC = () => {
         console.log("An error has ocured: ", e);
       });
   };
-
+  if (user.role === "airline") {
+    return (
+      <Container>
+        <Typography
+          variant="h4"
+          sx={{
+            maxWidth: 425,
+            marginX: "auto",
+            textAlign: "center",
+            paddingBottom: 2,
+          }}
+        >
+          Create a New Flight
+        </Typography>
+        <form
+          action="/"
+          method="POST"
+          onSubmit={(e) => {
+            handleFormSubmit(e);
+          }}
+        >
+          <Card variant="outlined" sx={{ maxWidth: 425, marginX: "auto", padding: 3 }}>
+            <Stack spacing={2}>
+              <TextField
+                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                label="ID (Numbers only)"
+                required={true}
+                value={values.id}
+                onChange={handleChange("id")}
+              />
+              <TextField
+                label="Flight Number"
+                required={true}
+                value={values.code}
+                onChange={handleChange("code")}
+              />
+              <TextField
+                label="Flight Name"
+                required={true}
+                value={values.flight_name}
+                onChange={handleChange("flight_name")}
+              />
+              <TextField
+                required={true}
+                label="Operator"
+                value={values.operator}
+                onChange={handleChange("operator")}
+              />
+              <TextField
+                required={true}
+                select
+                label="Select Departure Country"
+                value={values.departure}
+                onChange={handleChange("departure")}
+              >
+                {countryList.map((option) => (
+                  <MenuItem key={option.code} value={option.name}>
+                    {option.name} ({option.code})
+                  </MenuItem>
+                ))}
+              </TextField>
+              <TextField
+                required={true}
+                select
+                label="Select Arrival Country"
+                value={values.arrival}
+                onChange={handleChange("arrival")}
+              >
+                {countryList.map((option) => (
+                  <MenuItem key={option.code} value={option.name}>
+                    {option.name} ({option.code})
+                  </MenuItem>
+                ))}
+              </TextField>
+              <Button variant="outlined" type="submit" sx={{ width: "100%" }}>
+                Submit
+              </Button>
+            </Stack>
+          </Card>
+        </form>
+        {values.error !== null &&
+          (values.error === true ? (
+            <Alert
+              severity="error"
+              onClose={() => {
+                setValues({ ...values, error: null });
+              }}
+            >
+              An error has occured — Flight probably exists!
+            </Alert>
+          ) : (
+            <Alert
+              severity="success"
+              onClose={() => {
+                setValues({ ...values, error: null });
+              }}
+            >
+              Success — Flight created successfully!
+            </Alert>
+          ))}
+      </Container>
+    );
+  }
   return (
     <Container>
-      <Typography
-        variant="h4"
-        sx={{
-          maxWidth: 425,
-          marginX: "auto",
-          textAlign: "center",
-          paddingBottom: 2,
-        }}
-      >
-        Create a New Flight
-      </Typography>
-      <form
-        action="/"
-        method="POST"
-        onSubmit={(e) => {
-          handleFormSubmit(e);
-        }}
-      >
-        <Card variant="outlined" sx={{ maxWidth: 425, marginX: "auto", padding: 3 }}>
-          <Stack spacing={2}>
-            <TextField
-              inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-              label="ID (Numbers only)"
-              required={true}
-              value={values.id}
-              onChange={handleChange("id")}
-            />
-            <TextField
-              label="Flight Number"
-              required={true}
-              value={values.code}
-              onChange={handleChange("code")}
-            />
-            <TextField
-              label="Flight Name"
-              required={true}
-              value={values.flight_name}
-              onChange={handleChange("flight_name")}
-            />
-            <TextField
-              required={true}
-              label="Operator"
-              value={values.operator}
-              onChange={handleChange("operator")}
-            />
-            <TextField
-              required={true}
-              select
-              label="Select Departure Country"
-              value={values.departure}
-              onChange={handleChange("departure")}
-            >
-              {countryList.map((option) => (
-                <MenuItem key={option.code} value={option.name}>
-                  {option.name} ({option.code})
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              required={true}
-              select
-              label="Select Arrival Country"
-              value={values.arrival}
-              onChange={handleChange("arrival")}
-            >
-              {countryList.map((option) => (
-                <MenuItem key={option.code} value={option.name}>
-                  {option.name} ({option.code})
-                </MenuItem>
-              ))}
-            </TextField>
-            <Button variant="outlined" type="submit" sx={{ width: "100%" }}>
-              Submit
-            </Button>
-          </Stack>
-        </Card>
-      </form>
-      {values.error !== null &&
-        (values.error === true ? (
-          <Alert
-            severity="error"
-            onClose={() => {
-              setValues({ ...values, error: null });
-            }}
-          >
-            An error has occured — Flight probably exists!
-          </Alert>
-        ) : (
-          <Alert
-            severity="success"
-            onClose={() => {
-              setValues({ ...values, error: null });
-            }}
-          >
-            Success — Flight created successfully!
-          </Alert>
-        ))}
+      <Typography>You are not authorized to make these changes!</Typography>
     </Container>
   );
 };

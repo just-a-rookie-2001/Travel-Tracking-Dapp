@@ -11,6 +11,7 @@ import {
   IconButton,
   Container,
 } from "@mui/material";
+import useAuth from "../store/auth-store";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { registerWithEmailAndPassword } from "../services/firebase";
@@ -22,6 +23,7 @@ interface State {
 }
 
 const CreateDesk: React.FC = () => {
+  const { user } = useAuth();
   const [values, setValues] = React.useState<State>({
     email: "",
     password: "",
@@ -47,69 +49,75 @@ const CreateDesk: React.FC = () => {
     event.preventDefault();
     registerWithEmailAndPassword(values.email, values.password);
   };
-
+  if (user.role === "country" || user.role === "admin") {
+    return (
+      <Container>
+        <Typography
+          variant="h3"
+          sx={{
+            maxWidth: 425,
+            marginX: "auto",
+            textAlign: "center",
+            paddingBottom: 2,
+          }}
+        >
+          Sign Up
+        </Typography>
+        <form
+          action="/"
+          method="POST"
+          onSubmit={(e) => {
+            handleFormSubmit(e);
+          }}
+        >
+          <Card variant="outlined" sx={{ maxWidth: 425, marginX: "auto", padding: 3 }}>
+            <Stack spacing={2}>
+              <FormControl variant="outlined" sx={{ width: "100%" }}>
+                <InputLabel htmlFor="outlined-email">Email</InputLabel>
+                <OutlinedInput
+                  required={true}
+                  id="outlined-email"
+                  type={"email"}
+                  value={values.email}
+                  onChange={handleChange("email")}
+                  label="Email"
+                />
+              </FormControl>
+              <FormControl variant="outlined" sx={{ width: "100%" }}>
+                <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-password"
+                  type={values.showPassword ? "text" : "password"}
+                  value={values.password}
+                  required={true}
+                  onChange={handleChange("password")}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="Password"
+                />
+              </FormControl>
+              <Button variant="outlined" type="submit" sx={{ width: "100%" }}>
+                Submit
+              </Button>
+            </Stack>
+          </Card>
+        </form>
+      </Container>
+    );
+  }
   return (
     <Container>
-      <Typography
-        variant="h3"
-        sx={{
-          maxWidth: 425,
-          marginX: "auto",
-          textAlign: "center",
-          paddingBottom: 2,
-        }}
-      >
-        Sign Up
-      </Typography>
-      <form
-        action="/"
-        method="POST"
-        onSubmit={(e) => {
-          handleFormSubmit(e);
-        }}
-      >
-        <Card variant="outlined" sx={{ maxWidth: 425, marginX: "auto", padding: 3 }}>
-          <Stack spacing={2}>
-            <FormControl variant="outlined" sx={{ width: "100%" }}>
-              <InputLabel htmlFor="outlined-email">Email</InputLabel>
-              <OutlinedInput
-                required={true}
-                id="outlined-email"
-                type={"email"}
-                value={values.email}
-                onChange={handleChange("email")}
-                label="Email"
-              />
-            </FormControl>
-            <FormControl variant="outlined" sx={{ width: "100%" }}>
-              <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-              <OutlinedInput
-                id="outlined-adornment-password"
-                type={values.showPassword ? "text" : "password"}
-                value={values.password}
-                required={true}
-                onChange={handleChange("password")}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      edge="end"
-                    >
-                      {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-                label="Password"
-              />
-            </FormControl>
-            <Button variant="outlined" type="submit" sx={{ width: "100%" }}>
-              Submit
-            </Button>
-          </Stack>
-        </Card>
-      </form>
+      <Typography>You are not authorized to make these changes!</Typography>
     </Container>
   );
 };
