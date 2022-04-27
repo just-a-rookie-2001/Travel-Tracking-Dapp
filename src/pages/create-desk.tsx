@@ -13,7 +13,6 @@ import {
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-
 import { registerWithEmailAndPassword } from "../services/firebase";
 
 interface State {
@@ -22,17 +21,16 @@ interface State {
   showPassword: boolean;
 }
 
-const SignUp: React.FC = () => {
+const CreateDesk: React.FC = () => {
   const [values, setValues] = React.useState<State>({
     email: "",
     password: "",
     showPassword: false,
   });
 
-  const handleChange =
-    (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      setValues({ ...values, [prop]: event.target.value });
-    };
+  const handleChange = (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValues({ ...values, [prop]: event.target.value });
+  };
 
   const handleClickShowPassword = () => {
     setValues({
@@ -41,9 +39,7 @@ const SignUp: React.FC = () => {
     });
   };
 
-  const handleMouseDownPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
 
@@ -72,10 +68,7 @@ const SignUp: React.FC = () => {
           handleFormSubmit(e);
         }}
       >
-        <Card
-          variant="outlined"
-          sx={{ maxWidth: 425, marginX: "auto", padding: 3 }}
-        >
+        <Card variant="outlined" sx={{ maxWidth: 425, marginX: "auto", padding: 3 }}>
           <Stack spacing={2}>
             <FormControl variant="outlined" sx={{ width: "100%" }}>
               <InputLabel htmlFor="outlined-email">Email</InputLabel>
@@ -89,9 +82,7 @@ const SignUp: React.FC = () => {
               />
             </FormControl>
             <FormControl variant="outlined" sx={{ width: "100%" }}>
-              <InputLabel htmlFor="outlined-adornment-password">
-                Password
-              </InputLabel>
+              <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
                 type={values.showPassword ? "text" : "password"}
@@ -123,4 +114,4 @@ const SignUp: React.FC = () => {
   );
 };
 
-export default SignUp;
+export default CreateDesk;

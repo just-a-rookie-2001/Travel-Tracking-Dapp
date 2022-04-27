@@ -19,7 +19,8 @@
     "react-hook-form": "^7.28.1",
     "react-router-dom": "^6.2.2",
     "truffle": "^5.5.7",
-    "web3": "^1.7.1"
+    "web3": "^1.7.1",
+    "zustand": "^3.7.2"
   },
   "devDependencies": {
     "@types/react": "^17.0.33",

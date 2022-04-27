@@ -28,12 +28,9 @@ const Login: React.FC = () => {
     password: "",
     showPassword: false,
   });
-
-  const handleChange =
-    (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      setValues({ ...values, [prop]: event.target.value });
-    };
-
+  const handleChange = (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValues({ ...values, [prop]: event.target.value });
+  };
   const handleClickShowPassword = () => {
     setValues({
       ...values,
@@ -41,9 +38,7 @@ const Login: React.FC = () => {
     });
   };
 
-  const handleMouseDownPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
 
@@ -72,10 +67,7 @@ const Login: React.FC = () => {
           handleFormSubmit(e);
         }}
       >
-        <Card
-          variant="outlined"
-          sx={{ maxWidth: 425, marginX: "auto", padding: 3 }}
-        >
+        <Card variant="outlined" sx={{ maxWidth: 425, marginX: "auto", padding: 3 }}>
           <Stack spacing={2}>
             <FormControl variant="outlined" sx={{ width: "100%" }}>
               <InputLabel htmlFor="outlined-email">Email</InputLabel>
@@ -89,9 +81,7 @@ const Login: React.FC = () => {
               />
             </FormControl>
             <FormControl variant="outlined" sx={{ width: "100%" }}>
-              <InputLabel htmlFor="outlined-adornment-password">
-                Password
-              </InputLabel>
+              <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
               <OutlinedInput
                 required={true}
                 id="outlined-adornment-password"

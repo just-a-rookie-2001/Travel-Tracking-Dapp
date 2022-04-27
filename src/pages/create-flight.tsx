@@ -9,7 +9,6 @@ import {
   Alert,
   Container,
 } from "@mui/material";
-
 import countryList from "../data/countries.json";
 import { createFlightOnBlockchain } from "../services/blockchain";
 
@@ -34,10 +33,9 @@ const CreatePerson: React.FC = () => {
     error: null,
   });
 
-  const handleChange =
-    (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      setValues({ ...values, [prop]: event.target.value });
-    };
+  const handleChange = (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValues({ ...values, [prop]: event.target.value });
+  };
 
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -76,10 +74,7 @@ const CreatePerson: React.FC = () => {
           handleFormSubmit(e);
         }}
       >
-        <Card
-          variant="outlined"
-          sx={{ maxWidth: 425, marginX: "auto", padding: 3 }}
-        >
+        <Card variant="outlined" sx={{ maxWidth: 425, marginX: "auto", padding: 3 }}>
           <Stack spacing={2}>
             <TextField
               inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
@@ -138,17 +133,26 @@ const CreatePerson: React.FC = () => {
           </Stack>
         </Card>
       </form>
-      {values.error !== null ? (
-        values.error === true ? (
-          <Alert severity="error" onClose={() => {setValues({...values, error: null})}}>
+      {values.error !== null &&
+        (values.error === true ? (
+          <Alert
+            severity="error"
+            onClose={() => {
+              setValues({ ...values, error: null });
+            }}
+          >
             An error has occured — Flight probably exists!
           </Alert>
         ) : (
-          <Alert severity="success" onClose={() => {setValues({...values, error: null})}}>
+          <Alert
+            severity="success"
+            onClose={() => {
+              setValues({ ...values, error: null });
+            }}
+          >
             Success — Flight created successfully!
           </Alert>
-        )
-      ) : null}
+        ))}
     </Container>
   );
 };

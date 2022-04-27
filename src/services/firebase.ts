@@ -6,15 +6,7 @@ import {
   sendPasswordResetEmail,
   signOut,
 } from "firebase/auth";
-import {
-  getFirestore,
-  query,
-  getDocs,
-  collection,
-  where,
-  addDoc,
-} from "firebase/firestore";
-import { Analytics, getAnalytics } from "firebase/analytics";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBUFYf-txDHXFN7mayrkGryhcnfC3Jkvoo",
@@ -33,16 +25,13 @@ const db = getFirestore(app);
 const logInWithEmailAndPassword = async (email: string, password: string) => {
   try {
     await signInWithEmailAndPassword(auth, email, password);
-  } catch (err:any) {
+  } catch (err: any) {
     console.error(err);
     alert(err.message);
   }
 };
 
-const registerWithEmailAndPassword = async (
-  email: string,
-  password: string
-) => {
+const registerWithEmailAndPassword = async (email: string, password: string) => {
   try {
     const res = await createUserWithEmailAndPassword(auth, email, password);
     const user = res.user;
@@ -52,7 +41,7 @@ const registerWithEmailAndPassword = async (
       authProvider: "local",
       email,
     });
-  } catch (err:any) {
+  } catch (err: any) {
     console.error(err);
     alert(err.message);
   }
@@ -62,7 +51,7 @@ const sendPasswordReset = async (email: string) => {
   try {
     await sendPasswordResetEmail(auth, email);
     alert("Password reset link sent!");
-  } catch (err:any) {
+  } catch (err: any) {
     console.error(err);
     alert(err.message);
   }
@@ -72,9 +61,11 @@ const logout = () => {
   signOut(auth);
 };
 
-// let analytics: Analytics;
-// if (typeof window !== "undefined") {
-//   analytics = getAnalytics(app);
-// }
-
-export { auth, db, logInWithEmailAndPassword, registerWithEmailAndPassword, sendPasswordReset, logout };
+export {
+  auth,
+  db,
+  logInWithEmailAndPassword,
+  registerWithEmailAndPassword,
+  sendPasswordReset,
+  logout,
+};
