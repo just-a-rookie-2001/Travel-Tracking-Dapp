@@ -49,8 +49,35 @@ contract Immigration is Citizen, Flight, Country {
         uint256 citizen_id,
         uint256 flight_id,
         string memory country_name
-    ) public {
-        checkIllegalTravel(citizen_id, flight_id);
+    ) public returns (string memory) {
+        // if departure country has whitelisted the last known location, then no need to check it
+        if (
+            !Country.checkWhiteListCountry(
+                Flight.getFlightDeparture(flight_id),
+                Citizen.getLastKnownLocation(citizen_id)
+            )
+        ) checkIllegalTravel(citizen_id, flight_id);
+
+        // check if country is blacklisted or graylisted
+        (bool country_result, uint256 list_num) = Country.checkListCountry(
+            citizen_id
+        );
+        if (country_result == false) {
+            if (list_num == 1) return "failure";
+            else if (list_num == 2) return "warning";
+        }
+
+        // check if citizen is blacklisted or graylisted
+        (bool citizen_result, uint256 list_n) = Country.checkListCitizen(
+            citizen_id
+        );
+        if (citizen_result == false) {
+            if (list_num == 1) return "failure";
+            else if (list_num == 2) return "warning";
+        }
+
+        // allow to board if no problems
+        addPersonToFlight(citizen_id, flight_id);
     }
 
     function addPersonToFlight(uint256 citizen_id, uint256 flight_id) public {
@@ -65,6 +92,41 @@ contract Immigration is Citizen, Flight, Country {
             citizen_id,
             Flight.getFlightArrival(flight_id)
         );
+    }
+
+    function clearArrivalImmigration(
+        uint256 citizen_id,
+        uint256 flight_id,
+        string memory country_name
+    ) public returns (string memory) {
+        // // if arrival country has whitelisted the last known location, then no need to check it
+        // if (
+        //     !Country.checkWhiteListCountry(
+        //         Flight.getFlightDeparture(flight_id),
+        //         Citizen.getLastKnownLocation(citizen_id)
+        //     )
+        // ) checkIllegalTravel(citizen_id, flight_id);
+
+        // check if country is blacklisted or graylisted
+        (bool country_result, uint256 list_num) = Country.checkListCountry(
+            citizen_id
+        );
+        if (country_result == false) {
+            if (list_num == 1) return "failure";
+            else if (list_num == 2) return "warning";
+        }
+
+        // check if citizen is blacklisted or graylisted
+        (bool citizen_result, uint256 list_n) = Country.checkListCitizen(
+            citizen_id
+        );
+        if (citizen_result == false) {
+            if (list_num == 1) return "failure";
+            else if (list_num == 2) return "warning";
+        }
+
+        // allow to board if no problems
+        allowToEnterCountry(citizen_id, flight_id);
     }
 
     function allowToEnterCountry(uint256 citizen_id, uint256 flight_id) public {

@@ -35,6 +35,11 @@ contract Citizen {
         string reason;
     }
 
+    struct ListedCountry {
+        string country;
+        uint256 duration;
+    }
+
     struct citizen {
         uint256 id;
         string passport_number;
@@ -46,6 +51,8 @@ contract Citizen {
         string[] connecting_countries;
         string arrival;
         TravelHistory[] travel_history;
+        ListedCountry[] blacklisted_countries;
+        ListedCountry[] graylisted_countries;
     }
 
     mapping(uint256 => citizen) citizenHashMap;
@@ -136,5 +143,31 @@ contract Citizen {
     function setCitizenArrival(uint256 id, string memory ari) internal {
         require(citizenHashMap[id].id == id, "Citizen does not exist");
         citizenHashMap[id].arrival = ari;
+    }
+
+    function getCitizenList(uint256 id, uint8 list)
+        public
+        view
+        returns (ListedCountry[] memory)
+    {
+        if (list == 1) return getCitizen(id).blacklisted_countries;
+        else return getCitizen(id).graylisted_countries;
+    }
+
+    function setCitizenList(
+        uint256 id,
+        uint8 list,
+        string memory country,
+        uint256 duration
+    ) public {
+        require(citizenHashMap[id].id == id, "Citizen does not exist");
+        if (list == 1)
+            citizenHashMap[id].blacklisted_countries.push(
+                ListedCountry(country, duration)
+            );
+        else
+            citizenHashMap[id].graylisted_countries.push(
+                ListedCountry(country, duration)
+            );
     }
 }
