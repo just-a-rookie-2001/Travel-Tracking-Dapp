@@ -79,6 +79,10 @@ contract Citizen {
         citizenHashMap[id].departure = "";
         citizenHashMap[id].connecting_countries = [""];
         citizenHashMap[id].arrival = "";
+        // citizenHashMap[id].travel_history.push();
+        // citizenHashMap[id].travel_history[citizenHashMap[id].travel_history.length - 1].country = nation;
+        // citizenHashMap[id].travel_history[citizenHashMap[id].travel_history.length - 1].date = block.timestamp;
+        // citizenHashMap[id].travel_history[citizenHashMap[id].travel_history.length - 1].reason = "Nationality";
         citizenHashMap[id].travel_history.push(
             TravelHistory(nation, block.timestamp, "Nationality")
         );

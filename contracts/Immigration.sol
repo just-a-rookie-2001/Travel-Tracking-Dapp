@@ -99,13 +99,13 @@ contract Immigration is Citizen, Flight, Country {
         uint256 flight_id,
         string memory country_name
     ) public returns (string memory) {
-        // // if arrival country has whitelisted the last known location, then no need to check it
-        // if (
-        //     !Country.checkWhiteListCountry(
-        //         Flight.getFlightDeparture(flight_id),
-        //         Citizen.getLastKnownLocation(citizen_id)
-        //     )
-        // ) checkIllegalTravel(citizen_id, flight_id);
+        // if arrival country has whitelisted the last known location, then no need to check it
+        if (
+            !Country.checkWhiteListCountry(
+                Flight.getFlightDeparture(flight_id),
+                Citizen.getLastKnownLocation(citizen_id)
+            )
+        ) checkIllegalTravel(citizen_id, flight_id);
 
         // check if country is blacklisted or graylisted
         (bool country_result, uint256 list_num) = Country.checkListCountry(
@@ -125,7 +125,7 @@ contract Immigration is Citizen, Flight, Country {
             else if (list_num == 2) return "warning";
         }
 
-        // allow to board if no problems
+        // allow to deboard if no problems
         allowToEnterCountry(citizen_id, flight_id);
     }
 
@@ -148,13 +148,18 @@ contract Immigration is Citizen, Flight, Country {
         Citizen.setCitizenArrival(citizen_id, "");
     }
 
-    function emergency_landing(uint256 citizen_id, uint256 flight_id) public {
-        Flight.flight memory f = Flight.getFlight(flight_id);
+    function emergency_landing(
+        uint256 citizen_id,
+        uint256 flight_id,
+        string memory country
+    ) public {
+        Flight.getFlight(flight_id);
+        Country.getCountry(country);
 
-        Citizen.setLastKnownLocation(
-            citizen_id,
-            f.arrival_airport_code,
-            "Emergency"
-        );
+        uint256[] memory pif = passengersInFlight[flight_id];
+
+        for (uint256 index = 0; index < pif.length; index++) {
+            Citizen.setLastKnownLocation(pif[index], country, "Emergency");
+        }
     }
 }

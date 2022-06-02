@@ -5,10 +5,6 @@ pragma solidity >=0.7.0 <0.9.0;
 import "./Citizen.sol";
 
 contract Country is Citizen {
-    struct ListedCountry {
-        string country_name;
-        uint256 duration;
-    }
 
     struct country {
         string country_name;
@@ -90,7 +86,7 @@ contract Country is Citizen {
 
                 for (uint256 i = 0; i < cntry_b.length; i++) {
                     if (
-                        keccak256(abi.encodePacked(cntry_b[i].country_name)) ==
+                        keccak256(abi.encodePacked(cntry_b[i].country)) ==
                         keccak256(abi.encodePacked(citizen_dep))
                     ) return (false, a);
                 }
@@ -107,7 +103,7 @@ contract Country is Citizen {
 
             for (uint256 i = 0; i < cntry_b.length; i++) {
                 if (
-                    keccak256(abi.encodePacked(cntry_b[i].country_name)) ==
+                    keccak256(abi.encodePacked(cntry_b[i].country)) ==
                     keccak256(abi.encodePacked(citizen_dep))
                 ) return (false, a);
             }
@@ -162,6 +158,7 @@ contract Country is Citizen {
 
     function checkWhiteListCountry(string memory dep, string memory citizen_lkl)
         public
+        view
         returns (bool)
     {
         require(
@@ -180,7 +177,7 @@ contract Country is Citizen {
             .whitelisted_countries;
         for (uint256 index = 0; index < wlist.length; index++) {
             if (
-                keccak256(abi.encodePacked(wlist[index].country_name)) ==
+                keccak256(abi.encodePacked(wlist[index].country)) ==
                 keccak256(abi.encodePacked(citizen_lkl))
             ) return true;
         }
